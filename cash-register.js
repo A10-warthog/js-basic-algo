@@ -1,9 +1,15 @@
 export default checkCashRegister(price, cash, cid) {
+  const currency = { 
+    Penny: 0.01,
+    Nickel: 0.05,
+    Dime: 0.1,
+    Quarter: 0.25,
+    'One Dollar': 1,
+    'Five Dollars': 5,
+    'Ten Dollars': 10,
+    'Twenty Dollars': 20,
+    'Hundred Dollars': 100,
+  };
   let change = cash - price;  
-  for (let i = 0; i < cid.length; i++) {
-     change = change - cid[i][1];
-     cid[i][1] = 0;
-     if (change === 0 && cid.every(elm => elm[1] === 0))
-      return change
-  }
+  
 }
