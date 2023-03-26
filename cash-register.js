@@ -27,4 +27,44 @@ export default checkCashRegister(price, cash, cid) {
       change: cid,
     };  
   
+  // arrange cid array from highest to lowest
+  const drawer = cid
+    .reverse()
+    .filter((elm) => elm[1] > 0)
+    .map((elm) => {
+      elm[1] = Math.round(elm[1] * 100);
+      return elm;
+    });
+
+  // Reduce drawer array to get changes
+  const returnChange = drawer.reduce((arr, cashIn) => {
+    if (change >= currency[cashIn[0]]) {
+      // val is current cashIn currency
+      const val = currency[cashIn[0]];
+      // increment inc to store changes
+      let inc = 0;
+      while (cashIn[1] > 0) {
+        change = change - val;
+        inc += val;
+        cashIn[1] -= val;
+        if (change < val) break;
+      }
+      arr.push([cashIn[0], inc / 100]);
+    }
+    return arr;
+  }, []);
+
+  // return object with array with all the changes and status open
+  if (change === 0)
+    return {
+      status: "OPEN",
+      change: returnChange,
+    };
+
+  // return object when there are no sufficient funds
+  if (change !== 0)
+    return {
+      status: "INSUFFICIENT_FUNDS",
+      change: [],
+    };
 }
